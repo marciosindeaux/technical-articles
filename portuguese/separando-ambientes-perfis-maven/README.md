@@ -1,4 +1,7 @@
-# Separando Ambientes com Perfís do Maven
+# Separando Ambientes com Perfis do Maven
+
+_*Artigo originalmente escrito em 2020*_
+
 Uma pequena forma de separar as variáveis de ambiente de Desenvolvimento, Homologação e Produção, com Perfis do Maven (Maven Profiles). No caso exemplo, será utilizada uma aplicação que foi gerada no [Spring Initializr](https://start.spring.io/)
 
 ## Como é a vida sem usar Perfis do Maven 
@@ -96,7 +99,7 @@ _(arquivo app.properties localizado na pasta **profiles/prod/** )_
 
 ### Ajustando Application.properties
 
-application.properties é uma parte importante do nosso sistema, é ele que carrega as configurações, e, como no caso do projeto, se você ultiliza SpringBoot, é uma das partes mais importantes da sua aplicação.
+application.properties é uma parte importante do nosso sistema, é ele que carrega as configurações, e, como no caso do projeto, se você utiliza SpringBoot, é uma das partes mais importantes da sua aplicação.
 
 Ultilizando as variaveis, ele ficara assim :
 ```properties
@@ -106,7 +109,7 @@ spring.datasource.driver-class-name=@db_driver@
 spring.datasource.url=@db_url@
 ```
 
-> _Tá mais e aí ? Somente isso para eu conseguir configurar os dados dos ambientes da minha aplicaçoa?_
+> _Tá mais e aí ? Somente isso para eu conseguir configurar os dados dos ambientes da minha aplicação?_
 
 > _Sim, os dados ja estão prontos_
 
@@ -172,6 +175,6 @@ Levando como base o exemplo que tivemos nas ultimas partes da explicação, o po
 
 > _OK, E agora ? Meu projeto já está configurado com perfis do maven ?_
 
-Sim, está, basta apenas que você faça ```mvn {command} -P {id_profile}``` para conseguir rodar a sua aplicação no profile que desejou. Leve este pequeno projeto como inspiração para suas aventuras com os perfis do maven. 
+Sim, está, basta apenas que você faça ```mvn spring-boot:run -P dev``` (substituindo "dev" pelo profile desejado) para conseguir rodar a sua aplicação no profile que desejou. Leve este pequeno projeto como inspiração para suas aventuras com os perfis do maven. 
 
 Espero ter ajudado.
