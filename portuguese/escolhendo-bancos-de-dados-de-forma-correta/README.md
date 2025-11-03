@@ -21,7 +21,7 @@ Pra tomar esse tipo de decisão, voce precisa entender tanto os requisitos funci
 
 Caso voce não conheça esse termo, não o culpo, ele está muito mais proximo do design system do que do desenvolvimento em si. Esse teorema aborda 3 principais pilares de sistemas distribuidos sendo eles: 
 
-#### Consistencia 
+### Consistencia 
 
 Esse conceito é simples de entender, significa que todas as leituras buscando por um recurso retornam sempre o mesmo resultado a não ser que uma ação modificadora do recurso seja explicitamente chamada para tal e essa ação seja explicitamente concluida. Essa definição anda lado a lado com a definição de Modelo de Consistencia e Linearizabilidade[^2] em situações de acesso concorrente. 
 
@@ -29,7 +29,7 @@ Consistencia tem seus onus e bonus. Tempos de escrita podem ser mais longos e pe
 
 Em resumo, ***a consistencia prega que todos os nós do banco de dados veem os mesmos dados ao mesmo tempo para a escrita mais recente***. Isso garante que as respostas após essa escrita devem ter o dado mais atual. 
 
-#### Disponibilidade (Availability)
+### Disponibilidade (Availability)
 
 Esse conceito pode ser um pouco enganoso. Quando pensamos em disponibilidade normalmente pensamos que algo nunca deve estar fora do ar, mas aqui a aplicação é olhando para o recurso buscado. Essencialmente cada requisição feita sobre o recurso deve retornar uma resposta, mesmo que ela não seja a mais recente. 
 
