@@ -1,0 +1,13 @@
+server:
+  port: 7000
+
+spring:
+  application:
+    name: timelimiter
+
+resilience4j:
+  timelimiter:
+    instances:
+      controllerTimeLimiter:
+        timeoutDuration: 2s
+        cancelRunningFuture: true
