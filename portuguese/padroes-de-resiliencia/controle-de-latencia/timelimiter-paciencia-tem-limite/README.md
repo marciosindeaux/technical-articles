@@ -37,6 +37,8 @@ Na hora que esse acoplamento fica claro, uma dúvida vem à mente: O que acontec
 
 Para esse tipo de cenário crítico, é necessário falhar rápido para responder rápido. Os usuários precisam de uma resposta, mesmo que ela seja parecida com "Estamos passando por problemas técnicos, tente novamente mais tarde." Para isso, você adiciona um Timeout; caso uma das requisições demore mais que os X segundos que você estabeleceu, a resposta automaticamente vira um timeout. 
 
+___
+
 ### Tradeoffs de se usar Timeout
 
 Utilizar um timeout bem definido em sua aplicação que depende de outras pode trazer diversas vantagens. Dentre elas, talvez a Proteção contra latência baixa seja a mais notável de todas. Junto dela vêm outras vantagens como Falha rápida consciente. Configurar um Timeout Duration (Tempo para responder timeout) certo para a aplicação é essencial.
@@ -45,10 +47,14 @@ Em contrapartida, existem desvantagens de se usar ele. Uma das maiores desvantag
 
 No entanto, o principal desafio de se implementar um Timeout é, com certeza, o balanceamento na hora de escolher um tempo. Definir um tempo curto demais pode fazer com que sua aplicação se torne um centro de falhas falsas, e definir um tempo longo demais pode fazer com que você se torne o gargalo. É necessário analisar mais de perto, principalmente se seus timeouts forem em operações de escrita. Para uma abordagem interessante, é necessário analisar as métricas do serviço solicitante e do solicitado, assim fica claro quais são os tempos no pior e no melhor caso em condições normais.
 
+___
+
 ### Extra: Implementação 
  
 [Aqui](./exmple-project/) é possível encontrar uma pasta. Dentro desta pasta, há um pequeno projeto em Kotlin, Gradle e Spring Boot com o Resilience4J. Esse projeto implementa apenas o Timeout.
 
 A estrutura do projeto é simples: Um controller e uma service. Nesta service, há um método que tem um `TimeUnit.MILLISECONDS.sleep(N)` que é responsável por deixar o serviço em espera para que o timeout possa entrar em ação.
+
+___
 
 Embora essencial, o Timeout é apenas a primeira linha de defesa. Ele não consegue monitorar a saúde do serviço dependente nem evitar que ele seja sobrecarregado repetidamente. Por isso, é importante salientar que, apesar de poder ser aplicado sozinho, o Timeout normalmente está muito bem acompanhado de outros padrões: Circuit Breaker, Bulkhead, Fallback, Retry, Idempotency e Graceful Degradation.
