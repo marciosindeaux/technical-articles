@@ -39,7 +39,7 @@ Para esse tipo de cenário crítico, é necessário falhar rápido para responde
 
 ### Tradeoffs de se usar Timeout
 
-UUtilizar um timeout bem definido em sua aplicação que depende de outras pode trazer diversas vantagens. Dentre elas, talvez a Proteção contra latência baixa seja a mais notável de todas. Junto dela vêm outras vantagens como Falha rápida consciente. Configurar um Timeout Duration (Tempo para responder timeout) certo para a aplicação é essencial.
+Utilizar um timeout bem definido em sua aplicação que depende de outras pode trazer diversas vantagens. Dentre elas, talvez a Proteção contra latência baixa seja a mais notável de todas. Junto dela vêm outras vantagens como Falha rápida consciente. Configurar um Timeout Duration (Tempo para responder timeout) certo para a aplicação é essencial.
 
 Em contrapartida, existem desvantagens de se usar ele. Uma das maiores desvantagens é que podem aparecer Ghost Requests, isto é, requisições que foram canceladas, mas que continuam sendo processadas no serviço solicitado. Uma das características do Timeout é interromper o serviço chamador, mas não o chamado. Consequentemente, uma sobrecarga de rede e processamento pode acontecer, mesmo quando sua resposta informando o erro já tenha sido dada. Para que essa desvantagem seja superada, fazem-se necessários mecanismos de cancelamento, o que pode aumentar a complexidade do código entre os serviços.
 
