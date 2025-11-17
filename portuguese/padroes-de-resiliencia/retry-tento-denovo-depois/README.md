@@ -15,7 +15,7 @@ O Backoff é uma ferramenta muito usada junto com o Retry, ele é responsavel po
 
  * ***Fixo***: As re-tentativas acontecem entre um intervalo de tempo fixo. A cada X periodo de tempo por exemplo. O tempo de espera entre as retentativas pode se expresso pela seguinte equação abaixo: <br><br>
 
-    $backoffWaitTime(attemptNumeber) = initialInterval $ <br><br>
+    $backoffWaitTime(attemptNumeber) = initialInterval$ <br><br>
 
  * ***Linear***: As re-tentativas acontecem entre o intervalo de tempo anterior + valor fixo colocado na configuração. O tempo de espera entre as retentativas pode se expresso pela seguinte equação abaixo: <br><br>
 
@@ -44,7 +44,7 @@ Assim como o Backoff, o Jitter também tem tipos específicos, cada um com a sua
 
  * ***Equal Jitter (Aleatorizador Equalizado)***: Esse trabalha um pouco difernete.Ele parte do principio de para evitar sobrecargas é realmente necessário se ter um aleatorizador, mas ele deve seguir um tempo de espera minimo para que haja alguma auto-recuperação se necessário (no minimo metade do tempo estabelecido). Ele é representado da seuginte formula: <br><br>
 
-    $realWaitTime(backoffWaitTime) = \frac{backoffWaitTime}{2} + random(0, \frac{backoffWaitTime}{2}) $ <br><br>    
+    $realWaitTime(backoffWaitTime) = \frac{backoffWaitTime}{2} + random(0, \frac{backoffWaitTime}{2})$ <br><br>    
 
  * ***Decorrelated Jitter***: Esse jitter é o mais difícil de entender, mas é o que traz melhores resultados. Uma das coisas que ele leva em consideração é o backoff gerado, mas, diferentemente das outras alternativas de jitter, ele não depende apenas disso. O principal destaque desse tipo de jitter é que ele utiliza o tempo de espera da requisição anterior em conjunto com um fator de crescimento (semelhante ao backoff exponencial) para gerar um incremento aleatório e sempre incremental. Outro ponto positivo é que ele torna os clientes dessincronizados em relação aos serviços que utilizam esse padrão, tornando muito rara a ocorrência de sobrecarga na rede. Atenção: ***não é recomendável combinar esse jitter com backoff exponencial tradicional***. Ele pode ser descrito na seguinte formula:  <br><br>
 
