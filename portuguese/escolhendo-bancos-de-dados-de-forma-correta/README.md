@@ -54,7 +54,7 @@ Veja que eu falei que é impossivel ter 100% dos 3, mas isso é realmente necess
 
 Em 2010 foi proposto um principio que complementasse o CAP, o principio PACELC[^7]. Esse principio além de levar em consideração o CAP , também adiciona uma camada extra: Analise de latencias. Também é um caso que pode ser analidado caso o seu sistema demande.
 
-## 3 - Caso ainda haja duvidas: Modelos de Consistencia 
+## 3 - Caso ainda haja duvidas: Analise a Consistencia 
 
 Note que esta consistencia é diferente da consistencia do teorema CAP, apesar do mesmo nome.
 
@@ -69,7 +69,9 @@ O ***Isolamento*** uma regra fundamental. ***Cada transação deve executar de f
 
 ***Durabilidade*** é outro pilar. Ele diz que uma vez que ocorra uma transação bem sucedida, ***as alterações sobreviverão a qualquer falha sistemica***. Os registros depois de commitados e inseridos podem ser recuperados, e mesmo que haja uma corrupção o banco pode se re-estruturar apartir de um WAL ou um Backup diferencial. (Por favor, ativem seus backups).
 
-### Consistencia Forte Distribuida : *NewSQL*
+Bancos relacionais classicos como Postgre, MySQL, Oracle e SQL Server estão nesse grupo
+
+### Consistencia Forte Distribuida : *NewSQL* [^9]
 
 Esse modelo é um pouco mais recente, mas devido a criação de sistemas distribuidos e orientados a eventos ele tem tomado um espaço consideravel. Ele busca trazer as vantagens do ACID, mas trás ferramentas extras para adaptar para om contexto mais distribuido e multiplos nós : 
 
@@ -78,17 +80,50 @@ Esse modelo é um pouco mais recente, mas devido a criação de sistemas distrib
 
 ***Failover Automatico*** para nós coordenadores são essenciais para que o consenso distribuido possa acontecer. Neste caso , sempre que um nó coordenador falhar em alguma parte do processo, outro nó assume esse papel. Se todos os nós falharem significa que o consenso não foi atingido. 
 
-***Replicação sincrona*** é implementada para todos os nós que estão dentro da rede. Sempre que houver uma mudança principal em um nó, essa mudança só é de fato commitada no nó coordenador se for atingido um estado de consenso.
+***Replicação sincrona*** é implementada para todos os nós que estão dentro da rede. Sempre que houver uma mudança principal em um nó, essa mudança só é de fato commitada no nó coordenador se for atingido um estado de consenso
 
-<!-- 
-    1) Terminar consistencia forte distribuida colocando Transações distribuidas e MVCC, e encerrar dizendo que existem também outras ferramentas para auxilio
-    2) Falar sobre consistencia Causal 
-    3) Falar sobre consistencia eventual/BASE
-    4) Item 4 - Custos e Filtro operacional
-    5) Encerramento 
-    6) Correção gramatical 
-    7) Versão em ingles
--->
+***Controle de concorrencia Multi-versão (MVCC)*** é implementado para garantir que os dados inseridos ou consultados nunca tenham indisponibilidade alta. Nunca há de fato uma atualização dos dados, e sim uma sobreposição, mas versões antigas continuam existindo para que não haja perda de significativa de disbonibilidade quando se tenta atingir uma consistencia relativiamente forte. 
+
+***Transações distribuidas*** acontecem, pois cada nó tem um trecho significativo do contexto que será alterado. 
+
+Sistemas como FaunaDB, Google Spanner e Zookeeper estão aqui.
+
+### Consistencia Causal 
+
+Apesar de se usar pouco , esse é talvez o modelo que mais esteja presente no nosso dia-a-dia nas redes sociais. Ele preza que relações de causa e efeito devem ser vistas na ordem correta, mas se dois eventos não tem relação causal, a ordem deles pouco importa. Ele é o modelo mais util quando a performance e a dispobilibilidade são as mais importantes, em contrapartida ele é extremamente dificil de se implementar. Por isso ele usa ferramentas como :
+
+***Rastreamento de dependencias***  para garantir que os efeitos sejam aplicados apenas depois que a causa for criada. Pra isso existem estrategias de versionamento temporario e dependencia explicita. Assim um nó só aplica a operação quando todas as dependencias estiverem explicitamente presentes. 
+
+***Propagação controlada*** Para que caso ações em lote cheguem e as operações sejam aplicadas na ordem correta (Controle de filhos orfãos). Em determinados sistemas é comum encontrar um buffering completo da operação
+
+***Merge e resolução de conflitos*** são aplicados porque devido a concorrencia de acessos, podem se ter dados vindos de diferentes origens diferentes com relações validas de causa-efeito no dado inserido.
+
+
+Bancos como ChainReaction e Datomic estão aqui , mas outros bancos aplicam, como Redis e Mongo DB
+
+
+### Consistencia Variavel
+
+Boa parte dos bancos não relacionais podem ter configurçaões de consistencia variavel. Um sistenma com consistencia variavel tenta, essencialmente, equilibrar o teorema CAP de forma tal que não necessariamente voce vai ter 100% dos tres, mas vai ter uma % suficiente que não necessáriamente prejudique a aplicação usuária. 
+
+A consistencia Variavel funciona da seguinte maneira. Imagine uma aplicação distribuida com 8 Nós (Vamos chamar esse valor de ***N***). Definimos apartir disso quantos desses nós devem responder quando uma escrita for criada (Vamos chamar esse valor de ***E***).  Depois disso também determinamos quantos desses nós devem responder a uma solicitação de leitura de dados (Vamos chamar de ***L***). Note que podem haver nós que respondem pelos dois 
+
+
+* Um banco terá uma consistencia forte quando <br>
+  $E + L > N$
+
+Caso contrario, o banco de dados distribuido pode ser considerado de consistencia eventual ou fraca.
+
+Alguns bancos de dados distribuidos bem famosos estão deste lado da consistencia variavel, sendo eles Cassandra, Dynamo e Mongo. 
+
+___
+<b>Topicos futuros:</b>
+
+### Consistencia Eventual
+## 4 - BASE
+## 5 - Filtro financeiro e operacional.
+## 6 - Conclusão.
+
 
 
 
@@ -100,3 +135,5 @@ Esse modelo é um pouco mais recente, mas devido a criação de sistemas distrib
 [^6]: [Spanner, TrueTime & The CAP Theorem - Brewer, Eric.](https://static.googleusercontent.com/media/research.google.com/pt-BR//pubs/archive/45855.pdf)
 [^7]: [Consistency Tradeoffs in Modern Distributed Database System Design: CAP is Only Part of the Story - Abadi, Daniel J.](https://dl.acm.org/doi/10.1109/MC.2012.33)
 [^8]: [Fundamentals of Database Systems - Elmasri, R. & Navathe, S.](https://www.pearson.com/en-us/subject-catalog/p/fundamentals-of-database-systems/P200000003546/9780137502523)
+[^9]: [NewSQL: Towards Next-Generation Scalable RDBMS for Online
+Transaction Processing (OLTP) for Big Data Management - A. B. M. Moniruzzaman](https://arxiv.org/abs/1411.7343?utm_source=chatgpt.com)
