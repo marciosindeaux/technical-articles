@@ -110,13 +110,52 @@ Caso contrário, o banco de dados distribuído pode ser considerado de consistê
 
 Alguns bancos de dados distribuídos bem famosos estão deste lado da consistência variável, sendo eles Cassandra, Dynamo e Mongo.
 
-___
-**Tópicos futuros:**
-
 ### Consistência Eventual
+
+Aqui boa parte dos bancos distribuidos se encontram. Inclusive bancos que são de consistencia variavel podem ser configurados com uma consistencia eventual (Fraca). Aqui o Tradeoff é claro: se tiramos a consistencia do teorema CAP, sobra dispibilibilidade e particionamento toleravel. Mas o que isso significa ?
+
+Bancos de dados de consistencia eventual normalmente são usados em sistemas que não precisam ter uma ancoragem forte no dado mais recente. Redes sociais, notificações, sistemas de milhas, carrinhos de compra e até o processamento da multa de velocidade do seu carro. As principais caracteristicas de sistemas de consistencia eventual são : 
+
+***Tolerancia a Latencia***: Como a disoponibilidade e o particionamento toleravel são os prinicpais fatores, sistemas de consistencia eventual costuman ser extremamente responsivos pra inserção de dados e busca. Pois ao inserir , voce garante que o dado foi inserido apenas naquele nó de rede, e na busca o primeiro nó disponivel mais proximo pode responder. 
+
+***Propagação Assincrona***: Como um dado é inserido apenas um nó por vez, uma propagação e validação é feito de forma assincrona em segundo plano. A propagação vai acontecer de fato depois da resposta ou da inserção, mas outros nós podem demorar o tempo que for para equalizar o dado, formando assim um: 
+
+***Periodo de Inconsistencia***: Existe um periodo de tempo (chamado de janela de inconsistencia) que é um periodo onde diferentes nós de rede podem ter diferentes respostas para o mesmo registro ou mesma chave. 
+
+Tendo um sistema de consistencia eventual, podemos não ter a resposta mais atual, mas agora nosso sistema pode ser distribuido geograficamente e as respostas acontecem no primeiro nó chamado, diminuindo drasticamente a latencia das respostas.
+
 ## 4 - BASE
+
+BASE é um acronimo. Ele representa as caracteristicas priorizadas em sistemas distribuidos com alta escalabilidade. Normalmente ele é visto como o oposto do ACID, apesar de não necessariamente estarem na mesma caixinha comparativa. Suas letras significam: 
+
+### BAsicamente disponivel (Basically Available)
+
+O sistema deve permanecer 100% operacional e responsivo para a maioria das requisições, mesmo quando ocorrem falhas externas, como falha de rede, nós ou partições. A principal motivação é que mesmo em periodos de indisponibilidade local por alguma falha critica de infraestrutura, os usuários consigam acessar os dados (mesmo que não sejam os mais atuais)
+
+### Estado Suave/Flexivel (Soft State)
+
+O sistema pode mudar o estado de alguns dados com o tempo, mesmo que não haja de fato uma entrada ou escrita externa. Como o estado não pode ser garantio em todos os nós ao mesmo tempo, durante o perido de sincronização, dados podem convergir de forma que não necessáriamente uma solicitação de escrita tenha sido realizada. Um cenário páreo é por exemplo um nó de rede no Polo Sul ou replicas read-only.
+
+
+### Consistência Eventual (Eventual Consistency)
+Como foi visto acima , existe uma troca clara de se ter os dados mais recentes, para se ter menos latencia e mais disponibilidade. Foi apartir dessa ideia que sistemas PACELC começaram a surgir.
+
+ACID e BASE são duas ideias completamente opostas, mas que também tratam de consistencias. Então porque BASE não é considerado um modelo de consistencia ? A resposta é mais complexa do que voce pensa. Enquanto ACID é uma ideia voltada a aplicação de bancos de dados e tem seu foco em tratar um modelo transacional, BASE é uma filosofia arquitetural ou principio de design. É só analisar o escopo: ACID sempre se trata de um sistema concentrado e unificado e suas definições de regras, enquato BASE sempre se dirige a sistemas distribuidos e inconsistentes, aceitando a natureza caotica dos sistemas distribuidos voltados a eventos. Lembrando tambḿe que o ACID diz como uma transação deve ser, enquanto o BASE diz como um sistema deve se comportar. 
+
 ## 5 - Filtro financeiro e operacional.
-## 6 - Conclusão.
+
+Se tem duas coisas que podem te impedir de trabalhar com o banco de dados escolhido, essas coisas sãoo filtro financeiro (o custo total da propriedade) e o filtro operacional.
+
+### Custo Financeiro - Custo total da propriedade (TCO)
+Para se analisar o quanto de fato um banco de dados vai custar e se é relamente o que é preciso para atender as necessidades finaneiras, é preciso analisar 4 coisas : 
+
+ * ***Custo da licensa***: Bancos dedados proprietaros costumam ter licensas objetivamente caras. De valor aos bancos Open Source
+ * ***Custo de escalabilidade***: Avalie se a aplciação terá um crescimento linear ou exponencial de dados. Sistemas concentrados costumam se tornar muito caros quando escalam.
+ * ***Custo operacional***: E necessário gastar com pessoas especialistas naquele assunto ? É necessario fazer cursos sobre ? Qual a curva de aprendizado ? Qual o SLA para atendimento 
+ * ***Custo Local(Se houver)*** : Custos como energia, espaço fisico, segurança e outros.
+ * ***Custo de Cloud (Se houver)***: Existem modelos de cobrança diferentes caso se escolha um banco de dados relacional ou não relacional. 
+
+
 
 [^1]: [IEEE Std 830-1998 - Recommended Practice for Software Requirements Specifications](https://ieeexplore.ieee.org/document/720574)
 [^2]: [Designing Data-Intensive Applications, Ch. 9 - Kleppmann, Martin](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/)
