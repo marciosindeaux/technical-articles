@@ -116,7 +116,7 @@ Alguns bancos de dados distribuídos bem famosos estão deste lado da consistên
 
 Aqui boa parte dos bancos distribuidos se encontram. Inclusive bancos que são de consistencia variavel podem ser configurados com uma consistencia eventual (Fraca). Aqui o Tradeoff é claro: se tiramos a consistencia do teorema CAP, sobra disponibilidade e particionamento toleravel. Mas o que isso significa ?
 
-Bancos de dados de consistencia eventual normalmente são usados em sistemas que não precisam ter uma ancoragem forte no dado mais recente. Redes sociais, notificações, sistemas de milhas, carrinhos de compra e até o processamento da multa de velocidade do seu carro. As principais caracteristicas de sistemas de consistencia eventual são :
+Bancos de dados de consistencia eventual normalmente são usados em sistemas que não precisam ter uma ancoragem forte no dado mais recente. Redes sociais, notificações, sistemas de milhas, carrinhos de compra e até o processamento da multa de velocidade do seu carro. As principais características de sistemas de consistencia eventual são :
 
 **_Tolerancia a Latencia_**: Como a disoponibilidade e o particionamento toleravel são os prinicpais fatores, sistemas de consistencia eventual costuman ser extremamente responsivos pra inserção de dados e busca. Pois ao inserir , voce garante que o dado foi inserido apenas naquele nó de rede, e na busca o primeiro nó disponivel mais proximo pode responder.
 
