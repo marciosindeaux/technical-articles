@@ -128,52 +128,51 @@ Tendo um sistema de consistencia eventual, podemos não ter a resposta mais atua
 
 ## 4 - BASE
 
-BASE é um acronimo. Ele representa as caracteristicas priorizadas em sistemas distribuidos com alta escalabilidade. Normalmente ele é visto como o oposto do ACID, apesar de não necessariamente estarem na mesma caixinha comparativa. Suas letras significam:
+BASE é um acrônimo. Ele representa as características priorizadas em sistemas distribuídos com alta escalabilidade. Normalmente ele é visto como o oposto do ACID, apesar de não necessariamente estarem na mesma caixinha comparativa. Suas letras significam:
 
-### BAsicamente disponivel (Basically Available)
+### Basicamente disponível (Basically Available)
 
-O sistema deve permanecer 100% operacional e responsivo para a maioria das requisições, mesmo quando ocorrem falhas externas, como falha de rede, nós ou partições. A principal motivação é que mesmo em periodos de indisponibilidade local por alguma falha critica de infraestrutura, os usuários consigam acessar os dados (mesmo que não sejam os mais atuais).
+O sistema deve permanecer 100% operacional e responsivo para a maioria das requisições, mesmo quando ocorrem falhas externas, como falhas de rede, nós ou partições. A principal motivação é que, mesmo em períodos de indisponibilidade local por alguma falha crítica de infraestrutura, os usuários consigam acessar os dados (mesmo que não sejam os mais atuais).
 
-A disponibilidade aqui é garantida por uma serie de estrategias que atuam sobre a premissa de que ocasionalmente erros podem acontecer, e que esses erros devem ser tratados e ter suas devidas soluções de contorno. Dentre as estratégias esão
+A disponibilidade aqui é garantida por uma série de estratégias que atuam sobre a premissa de que ocasionalmente erros podem acontecer, e que esses erros devem ser tratados e ter suas devidas soluções de contorno. Dentre as estratégias estão:
 
-**_Request Collapsing_**: O nome é um pouco auto-explicativo para quem conhece, mas essa estratégia visa aglomerar uma serie de requisições para reduzir a pressão de I/O do sistema. Se todas as requisições forem iguais, mas vindas de origens difrentes, faz sentido fazer N requsições ou apenas uma e devolver o valor N vezes ?
+**_Request Collapsing_**: O nome é um pouco autoexplicativo para quem conhece, mas essa estratégia visa aglomerar uma série de requisições para reduzir a pressão de I/O do sistema. Se todas as requisições forem iguais, mas vindas de origens diferentes, faz sentido fazer N requisições ou apenas uma e devolver o valor N vezes?
 
-**_Load Shedding_**: Requisições são baseadas pelo seu nivel de criticidade, existe uma triagem para cada requisição em seus momentos de entrada ou dependendo da origem. O Sistema, ao atingir um nivel alto de sobrecarga (Um Sinal), começa a descartar as requisições menos prioritarias a fim de salvar recursos para a que o sistema possa ter uma margem para processar as requisições já existentes.
+**_Load Shedding_**: Requisições são baseadas pelo seu nível de criticidade; existe uma triagem para cada requisição em seus momentos de entrada ou dependendo da origem. O sistema, ao atingir um nível alto de sobrecarga (um sinal), começa a descartar as requisições menos prioritárias a fim de salvar recursos para que o sistema possa ter uma margem para processar as requisições já existentes.
 
-### Estado Suave/Flexivel (Soft State)
+### Estado Suave/Flexível (Soft State)
 
-O sistema pode mudar o estado de alguns dados com o tempo, mesmo que não haja de fato uma entrada ou escrita externa. Como o estado não pode ser garantio em todos os nós simultaneamento, durante o perido de sincronização, dados podem convergir de forma que não necessáriamente uma solicitação de escrita tenha sido realizada. Um cenário páreo é por exemplo um nó de rede no Polo Sul ou replicas read-only. Para garantir que essas mudanças aconteçam em nós que não foram solicitados, duas estrategias podem ser usadas (Normalmente uma em detrimento da outra):
+O sistema pode mudar o estado de alguns dados com o tempo, mesmo que não haja de fato uma entrada ou escrita externa. Como o estado não pode ser garantido em todos os nós simultaneamente, durante o período de sincronização, dados podem convergir de forma que não necessariamente uma solicitação de escrita tenha sido realizada. Um cenário prático é, por exemplo, um nó de rede no Polo Sul ou réplicas read-only. Para garantir que essas mudanças aconteçam em nós que não foram solicitados, duas estratégias podem ser usadas (normalmente uma em detrimento da outra):
 
-**_Broadcast_**: Um nó envia para todos os outros uma replica do que foi de fato alterado (Seja de uma forma diferencial ou integral) e os nós ficam responsaveis por alterarem a si mesmos, quando um não consegue essa requisição é repetida até que todos entrem em um estado de consenso. Normalmente se arranja em uma estrutura de arvore.
+**_Broadcast_**: Um nó envia para todos os outros uma réplica do que foi de fato alterado (seja de uma forma diferencial ou integral), e os nós ficam responsáveis por alterarem a si mesmos. Quando um não consegue, essa requisição é repetida até que todos entrem em um estado de consenso. Normalmente se organiza em uma estrutura de árvore.
 
-**_Fofoquinha (Gossip/Epidemic Protocol)_**: Ao invés do broadcast, aqui cada nó escolhe aleatoriamente um pequeno subconjunto de outros nós para trocar informçaões através de mecanismos de Push (Enviar novas alterações), Pull (Saber das novas alterações) ou Push-pull (Trocar diffs). Protocolos de fofoca são os usados por exemplo no Apache Cassandra e DynamoDB, e o motivo é simples: com esses "micro conjuntos" não definidos e flexiveis, a redundancia de propagação é tão alta que é estatisticamente improvável que um nó não receba a alteração.
+**_Fofoquinha (Gossip/Epidemic Protocol)_**: Ao invés do broadcast, aqui cada nó escolhe aleatoriamente um pequeno subconjunto de outros nós para trocar informações através de mecanismos de push (enviar novas alterações), pull (saber das novas alterações) ou push-pull (trocar diffs). Protocolos de fofoca são usados, por exemplo, no Apache Cassandra e no DynamoDB, e o motivo é simples: com esses "micro conjuntos" não definidos e flexíveis, a redundância de propagação é tão alta que é estatisticamente improvável que um nó não receba a alteração.
 
 ### Consistência Eventual (Eventual Consistency)
 
-Esse é o ponto onde toda a parte da complexidade sistemica entra. Por mais que "o que" a consistencia eventual seja tenha sido explicado ali no topico 3, o "como" com certeza pairou um pouco pela sua cabeça. Para resolver os problemas as estrategias mais usadas são :
+Esse é o ponto onde toda a parte da complexidade sistêmica entra. Por mais que "o que" a consistência eventual seja tenha sido explicado ali no tópico 3, o "como" com certeza pairou um pouco pela sua cabeça. Para resolver os problemas, as estratégias mais usadas são:
 
-**_Mecanismos de Rastreamento Causal_**: São utilados vetores de versionalmento de alteração, baseados em relogios ou em versões em seus respectivos pods (Vector Clocks e Version Vectors), para que haja uma causalidade entre os eventos. As vezes para resolver confltos entre as mesmas versões ou situações de escrita ao mesmo tempo são utilizados merges semanticos.
+**_Mecanismos de Rastreamento Causal_**: São utilizados vetores de versionamento de alteração, baseados em relógios ou em versões em seus respectivos pods (Vector Clocks e Version Vectors), para que haja uma causalidade entre os eventos. Às vezes, para resolver conflitos entre as mesmas versões ou situações de escrita ao mesmo tempo, são utilizados merges semânticos.
 
-**_Ultima escrita Vence(LWW)_**: Uma estrategia de resolução de conflito baseada no timestamp da escrita. Normalmente sacrifica a causalidade em favor da simplicidade operacional, mas aumenta a entropia do sistema.
+**_Última Escrita Vence (LWW)_**: Uma estratégia de resolução de conflito baseada no timestamp da escrita. Normalmente sacrifica a causalidade em favor da simplicidade operacional, mas aumenta a entropia do sistema.
 
-Como foi visto acima , existe uma troca clara de se ter os dados mais recentes, para se ter menos latencia e mais disponibilidade. Foi apartir dessa ideia que sistemas PACELC começaram a surgir.
+Como foi visto acima, existe uma troca clara entre se ter os dados mais recentes e se ter menos latência e mais disponibilidade. Foi a partir dessa ideia que sistemas PACELC começaram a surgir.
 
-ACID e BASE são duas ideias completamente opostas, mas que também tratam de consistencias. Então porque BASE não é considerado um modelo de consistencia ? A resposta é mais complexa do que voce pensa. Enquanto ACID é uma ideia voltada a aplicação de bancos de dados e tem seu foco em tratar um modelo transacional, BASE é uma filosofia arquitetural ou principio de design. É só analisar o escopo: no ACID o desenvolvedor delega semprea complexidade ao banco, enquato BASE sempre se dirige a sistemas distribuidos e inconsistentes, aceitando a natureza caotica dos sistemas distribuidos voltados a eventos e projetando o sistema a ser tolerante a dados obsoletos e apto a lidar com reconciliações.
+ACID e BASE são duas ideias completamente opostas, mas que também tratam de consistências. Então, por que BASE não é considerado um modelo de consistência? A resposta é mais complexa do que você pensa. Enquanto ACID é uma ideia voltada à aplicação de bancos de dados e tem seu foco em tratar um modelo transacional, BASE é uma filosofia arquitetural ou princípio de design. É só analisar o escopo: no ACID, o desenvolvedor delega sempre a complexidade ao banco, enquanto BASE sempre se dirige a sistemas distribuídos e inconsistentes, aceitando a natureza caótica dos sistemas distribuídos voltados a eventos e projetando o sistema para ser tolerante a dados obsoletos e apto a lidar com reconciliações.
 
-## 5 - Filtro financeiro e operacional.
+## 5 - Filtro financeiro e operacional
 
-Se tem duas coisas que podem te impedir de trabalhar com o banco de dados escolhido, essas coisas sãoo filtro financeiro (o custo total da propriedade) e o filtro operacional.
+Se tem duas coisas que podem te impedir de trabalhar com o banco de dados escolhido, essas coisas são o filtro financeiro (o custo total da propriedade) e o filtro operacional.
 
-### Custo Financeiro - Custo total da propriedade (TCO)
+Custo Financeiro - Custo total da propriedade (TCO)
+Para se analisar o quanto de fato um banco de dados vai custar e se realmente é o que é preciso para atender às necessidades financeiras, é preciso analisar:
 
-Para se analisar o quanto de fato um banco de dados vai custar e se é relamente o que é preciso para atender as necessidades finaneiras, é preciso analisar:
-
-- **_Custo da licensa_**: Bancos dedados proprietaros costumam ter licensas objetivamente caras. De valor aos bancos Open Source
-- **_Custo de escalabilidade_**: Avalie se a aplciação terá um crescimento linear ou exponencial de dados. Sistemas concentrados costumam se tornar muito caros quando escalam.
-- **_Custo operacional_**: E necessário gastar com pessoas especialistas naquele assunto ? É necessario fazer cursos sobre ? Qual a curva de aprendizado ? Qual o SLA para atendimento
-- **_Custo Local(Se houver)_** : Custos como energia, espaço fisico, segurança e outros.
-- **_Custo de Cloud (Se houver)_**: Existem modelos de cobrança diferentes caso se escolha um banco de dados relacional ou não relacional.
-- **_Vendor Lock-in_**: Existe o perigo de voce ficar tão dependente desse banco a ponto de não conseguir migrar para outro na hora que a carteira apertar ?
+- **_Custo da licença_**: Bancos de dados proprietários costumam ter licenças objetivamente caras. Dê valor aos bancos open source.
+- **_Custo de escalabilidade_**: Avalie se a aplicação terá um crescimento linear ou exponencial de dados. Sistemas concentrados costumam se tornar muito caros quando escalam.
+- **_Custo operacional_**: É necessário gastar com pessoas especialistas naquele assunto? É necessário fazer cursos sobre isso? Qual a curva de aprendizado? Qual o SLA para atendimento?
+- **_Custo local (se houver)_**: Custos como energia, espaço físico, segurança e outros.
+- **_Custo de cloud (se houver)_**: Existem modelos de cobrança diferentes caso se escolha um banco de dados relacional ou não relacional.
+- **_Vendor Lock-in_**: Existe o perigo de você ficar tão dependente desse banco a ponto de não conseguir migrar para outro na hora que a carteira apertar?
 
 [^1]: [IEEE Std 830-1998 - Recommended Practice for Software Requirements Specifications](https://ieeexplore.ieee.org/document/720574)
 [^2]: [Designing Data-Intensive Applications, Ch. 9 - Kleppmann, Martin](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/)
