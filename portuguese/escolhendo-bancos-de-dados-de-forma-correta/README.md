@@ -104,9 +104,11 @@ Boa parte dos bancos não relacionais pode ter configurações de consistência 
 
 A consistência variável funciona da seguinte maneira. Imagine uma aplicação distribuída com 8 Nós (Vamos chamar esse valor de **_N_**). Definimos a partir disso quantos desses nós devem responder quando uma escrita for criada (Vamos chamar esse valor de **_E_**). Depois disso também determinamos quantos desses nós devem responder a uma solicitação de leitura de dados (Vamos chamar de **_L_**). Note que podem haver nós que respondem pelos dois.
 
-- Um banco terá uma consistência forte quando <br>
-
-  $E + L > N$
+- Um banco terá uma consistência forte quando:<br>
+```math
+E + L > N
+```
+<br>
 
 Caso contrário, o banco de dados distribuído pode ser considerado de consistência eventual ou fraca.
 
