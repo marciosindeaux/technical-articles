@@ -86,7 +86,7 @@ Esse modelo é um pouco mais recente, mas devido à criação de sistemas distri
 
 Sistemas como FaunaDB, Google Spanner e Zookeeper estão aqui.
 
-### Consistência Causal
+### Consistência Causal [^2] [^10]
 
 Apesar de se usar pouco, esse é talvez o modelo que mais esteja presente no nosso dia a dia nas redes sociais. Ele preza que relações de causa e efeito devem ser vistas na ordem correta, mas se dois eventos não têm relação causal, a ordem deles pouco importa. Ele é o modelo mais útil quando a performance e a disponibilidade são as mais importantes, em contrapartida ele é extremamente difícil de se implementar. Por isso ele usa ferramentas como:
 
@@ -98,7 +98,7 @@ Apesar de se usar pouco, esse é talvez o modelo que mais esteja presente no nos
 
 Bancos como ChainReaction e Datomic estão aqui, mas outros bancos aplicam, como Redis e MongoDB.
 
-### Consistência Variável
+### Consistência Variável [^11]
 
 Boa parte dos bancos não relacionais pode ter configurações de consistência variável. Um sistema com consistência variável tenta, essencialmente, equilibrar o teorema CAP de forma tal que não necessariamente você terá 100% dos três, mas terá uma porcentagem suficiente que não prejudique a aplicação usuária.
 
@@ -112,7 +112,7 @@ Caso contrário, o banco de dados distribuído pode ser considerado de consistê
 
 Alguns bancos de dados distribuídos bem famosos estão deste lado da consistência variável, sendo eles Cassandra, Dynamo e Mongo.
 
-### Consistência Eventual
+### Consistência Eventual [^12]
 
 Aqui boa parte dos bancos distribuidos se encontram. Inclusive bancos que são de consistencia variavel podem ser configurados com uma consistencia eventual (Fraca). Aqui o Tradeoff é claro: se tiramos a consistencia do teorema CAP, sobra disponibilidade e particionamento toleravel. Mas o que isso significa ?
 
@@ -126,7 +126,7 @@ Bancos de dados de consistencia eventual normalmente são usados em sistemas que
 
 Tendo um sistema de consistencia eventual, podemos não ter a resposta mais atual, mas agora nosso sistema pode ser distribuido geograficamente e as respostas acontecem no primeiro nó chamado, diminuindo drasticamente a latencia das respostas.
 
-## 4 - BASE
+## 4 - O Modelo BASE e Resiliência Operacional[^2][^7][^10][^12]
 
 BASE é um acrônimo. Ele representa as características priorizadas em sistemas distribuídos com alta escalabilidade. Normalmente ele é visto como o oposto do ACID, apesar de não necessariamente estarem na mesma caixinha comparativa. Suas letras significam:
 
@@ -175,11 +175,14 @@ Para se analisar o quanto de fato um banco de dados vai custar e se realmente é
 - **_Vendor Lock-in_**: Existe o perigo de você ficar tão dependente desse banco a ponto de não conseguir migrar para outro na hora que a carteira apertar?
 
 [^1]: [IEEE Std 830-1998 - Recommended Practice for Software Requirements Specifications](https://ieeexplore.ieee.org/document/720574)
-[^2]: [Designing Data-Intensive Applications, Ch. 9 - Kleppmann, Martin](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/)
+[^2]: [Designing Data-Intensive Applications- Kleppmann, Martin](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781491903063/)
 [^3]: [Linearizability: a correctness condition for concurrent objects - Herlihy, Maurice P.; Wing, Jeannette M. (1990).](https://dl.acm.org/doi/10.1145/78969.78972)
 [^4]: [The Guardian: Amazon reveals cause of AWS outage that took everything from banks to smart beds offline](https://www.theguardian.com/technology/2025/oct/24/amazon-reveals-cause-of-aws-outage)
 [^5]: [Inside Cloud Spanner and the CAP Theorem - Brewer, Eric.](https://cloud.google.com/blog/products/databases/inside-cloud-spanner-and-the-cap-theorem)
 [^6]: [Spanner, TrueTime & The CAP Theorem - Brewer, Eric.](https://static.googleusercontent.com/media/research.google.com/pt-BR//pubs/archive/45855.pdf)
 [^7]: [Consistency Tradeoffs in Modern Distributed Database System Design: CAP is Only Part of the Story - Abadi, Daniel J.](https://dl.acm.org/doi/10.1109/MC.2012.33)
 [^8]: [Fundamentals of Database Systems - Elmasri, R. & Navathe, S.](https://www.pearson.com/en-us/subject-catalog/p/fundamentals-of-database-systems/P200000003546/9780137502523)
-[^9]: [NewSQL: Towards Next-Generation Scalable RDBMS for Online Transaction Processing (OLTP) for Big Data Management - A. B. M. Moniruzzaman](https://arxiv.org/abs/1411.7343?utm_source=chatgpt.com)
+[^9]: [NewSQL: Towards Next-Generation Scalable RDBMS for Online Transaction Processing (OLTP) for Big Data Management - A. B. M. Moniruzzaman](https://arxiv.org/abs/1411.7343)
+[^10]: [Causal memory: definitions, implementation, and programming](https://www.semanticscholar.org/paper/Causal-memory%3A-definitions%2C-implementation%2C-and-Ahamad-Neiger/c6a76a29e39f6f0954cea15b7d5fd78249ab5da5)
+[^11]: [Dynamo: Amazon’s Highly Available Key-value Store - DeCandia, G., Hastorun D., Jampani M., Vogels W. and others](https://dl.acm.org/doi/10.1145/1323293.1294281)
+[^12]: [Eventually Consistent - Revisited - Vogels W.](https://www.allthingsdistributed.com/2008/12/eventually_consistent.html)

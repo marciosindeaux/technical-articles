@@ -5,3 +5,8 @@
 [^5]: [Inside Cloud Spanner and the CAP Theorem - Brewer, Eric.](https://cloud.google.com/blog/products/databases/inside-cloud-spanner-and-the-cap-theorem)
 [^6]: [Spanner, TrueTime & The CAP Theorem - Brewer, Eric.](https://static.googleusercontent.com/media/research.google.com/pt-BR//pubs/archive/45855.pdf)
 [^7]: [Consistency Tradeoffs in Modern Distributed Database System Design: CAP is Only Part of the Story - Abadi, Daniel J.](https://jmromer.org/papers/2010-consistency-tradeoffs-in-modern-distributed-database-system-design.pdf)
+[^8]: [Fundamentals of Database Systems - Elmasri, R. & Navathe, S.](<https://womengovtcollegevisakha.ac.in/departments/Fundamentals%20of%20Database%20Systems%20.pdf%20(%20PDFDrive%20).pdf)
+[^9]: [NewSQL: Towards Next-Generation Scalable RDBMS for Online Transaction Processing (OLTP) for Big Data Management - A. B. M. Moniruzzaman](https://arxiv.org/pdf/1411.7343)
+[^10]: [Causal memory: definitions, implementation, and programming](https://www-i2.moves.rwth-aachen.de/i2/fileadmin/user_upload/documents/Seminar_MCMM11/Causal_memory_1996.pdf)
+[^11]: [Dynamo: Amazon’s Highly Available Key-value Store - DeCandia, G., Hastorun D., Jampani M. and others](https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf)
+[^12]: [Eventually Consistent - Revisited - Vogels W.](https://www.allthingsdistributed.com/2008/12/eventually_consistent.html)
